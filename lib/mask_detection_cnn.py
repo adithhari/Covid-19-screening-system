@@ -13,7 +13,7 @@ from matplotlib.image import imread
 from tensorflow.keras.models import load_model
 
 print_normal('[INFO] Face Detector => Loading Model... ')
-model = load_model('assets/mask_detection.h5')
+model = load_model('assets/face_mask_detection_mobilenetv2.h5')
 print_success('Done')
 
 

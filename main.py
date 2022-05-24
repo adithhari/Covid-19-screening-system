@@ -17,6 +17,8 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # capture image from camera
 try:
     vidcap = cv2.VideoCapture(-1)
+    vidcap.set(3, 640)
+    vidcap.set(4, 480)
     while vidcap.isOpened():
         ret, frame = vidcap.read()
         if ret:
@@ -28,12 +30,12 @@ try:
             if (np.any(nearest_face)):
                 image_to_predict = cv2.cvtColor(
                     nearest_face, cv2.COLOR_BGR2RGB)
-                image_to_predict = cv2.resize(image_to_predict, (200, 200))
+                image_to_predict = cv2.resize(image_to_predict, (224, 224))
                 image_to_predict = np.expand_dims(image_to_predict, axis=0)
-                image_to_predict = image_to_predict.reshape(200, 200, 3)
+                image_to_predict = image_to_predict.reshape(224, 224, 3)
                 image_to_predict = image_to_predict / 256
-                prediction = mask_detection_cnn.detect_mask(
-                    image_to_predict.reshape(1, 200, 200, 3))
+                prediction = np.argmax(mask_detection_cnn.detect_mask(
+                    image_to_predict.reshape(1, 224, 224, 3)))
             for index, detected_face_rect in enumerate(detected_faces_rect):
                 startX = detected_face_rect['startX']
                 startY = detected_face_rect['startY']
@@ -69,7 +71,7 @@ except Exception as e:
 
 # use image from file system
 # try:
-#     frame = cv2.imread('assets/sample_data_1.jpg')
+#     frame = cv2.imread('assets/sample_data_10.jpg')
 #     if np.any(frame):
 #         face_detection_results = opencv_dnn.detect_faces(frame)
 #         nearest_face = face_detection_results['nearest_face']
@@ -109,7 +111,7 @@ except Exception as e:
 #                 cv2.rectangle(frame, (startX, startY), (
 #                     endX, endY), (255, 255, 0), 2)
 #         while True:
-#             cv2.imshow('COVID-19 Safety Screening System')
+#             cv2.imshow('COVID-19 Safety Screening System', frame)
 #             key = cv2.waitKey(1)
 #             if key == 27:
 #                 break
